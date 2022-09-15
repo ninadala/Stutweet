@@ -13,6 +13,7 @@
                     {% endif %}
                     <p class="card-text">{{ post.content }}</p>
                     <a href="{{ path('edit-post', {'id':post.id} ) }}" class="btn btn-warning">Modifier</a>
+                    <a href="{{ path('copy-post', {'id':post.id} ) }}" class="btn btn-info">Dupliquer</a>
                     <a href="{{ path('delete-post', {'id':post.id} ) }}" class="btn btn-danger">Supprimer</a>
                 </div>
             </div>

@@ -64,4 +64,14 @@ class PostController extends AbstractController
         ]);
     }
 
+    #[Route('/post/copy/{id<\d+>}', name:"copy-post")]
+    public function duplicate(Post $post, ManagerRegistry $doctrine): Response
+    {
+        $copyPost = clone $post;
+        $em = $doctrine->getManager();
+        $em->persist($copyPost);
+        $em->flush();
+        return $this->redirectToRoute("home");
+    }
+
 }
