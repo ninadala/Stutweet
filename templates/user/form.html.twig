@@ -1,0 +1,12 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    
+    {{ form_start(user_form, {'attr': {'class': 'container'}}) }}
+    
+    {{ form_rest(user_form) }}
+    <input class="btn btn-success mt-3" type="submit" value="Créer le compte">
+    <div>
+        <a href="/login" class="btn btn-link">Se connecter</a>
+    </div>
+{% endblock %}

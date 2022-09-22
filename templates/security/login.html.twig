@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello SecurityController!{% endblock %}
+
+{% block body %}
+    {% if error %}
+        <div class="alert alert-danger"> {{ error.messageKey }} </div>
+    {% endif %}
+
+    {# {{ form_start(form) }}
+
+    {{ form_rest(form) }}
+    <input type="submit" value="Connexion" class="btn btn-succes mt-2"> #}
+
+    <form method="post" class="container">
+        <label for="username" class="form-label">Nom d'utilisateur</label>
+        <input id="username" type="text" name="_username" value="{{ last_username }}" class="form-control">
+        <label for="password" class="form-label">Mot de Passe</label>
+        <input id="password" type="password" name="_password" class="form-control">
+        <input type="hidden" name="_target_path" value="/">
+        <input type="submit" value="Connexion" class="btn btn-success mt-2">
+    </form>
+
+    <a href="/user/new" class="btn btn-link">Vous n'avez pas encore de compte ?</a>
+    
+    {# <p><a href="{{ url("forgotpassword") }}">Forgot your password?</a></p> #}
+    
+{% endblock %}
