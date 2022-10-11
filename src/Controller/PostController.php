@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class PostController extends AbstractController
 {
@@ -31,6 +32,7 @@ class PostController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $post->setUser($this->getUser());
+            $post->setPublishedAt(new \DateTime());
             $em = $doctrine->getManager();
             $em->persist($post);
             $em->flush();
@@ -45,6 +47,10 @@ class PostController extends AbstractController
     public function delete(Post $post, ManagerRegistry $doctrine): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        if($this->getUser() !== $post->getUser()){
+            $this->addFlash("error", "Vous ne pouvez pas supprimer un post dont vous n'êtes pas l'auteur");
+            return $this->redirectToRoute("home");
+        }
         $em = $doctrine->getManager();
         $em->remove($post);
         $em->flush();
@@ -56,6 +62,11 @@ class PostController extends AbstractController
     public function update(Post $post, Request $request, ManagerRegistry $doctrine): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        if($this->getUser() !== $post->getUser()){
+            $this->addFlash("error", "Vous ne pouvez pas modifier un post dont vous n'êtes pas l'auteur");
+            return $this->redirectToRoute("home");
+            // throw new AccessDeniedException("Vous n'avez pas accès à cette page");
+        }
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -72,6 +83,10 @@ class PostController extends AbstractController
     public function duplicate(Post $post, ManagerRegistry $doctrine): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        if($this->getUser() !== $post->getUser()){
+            $this->addFlash("error", "Vous ne pouvez pas dupliquer un post dont vous n'êtes pas l'auteur");
+            return $this->redirectToRoute("home");
+        }
         $copyPost = clone $post;
         $em = $doctrine->getManager();
         $em->persist($copyPost);
